@@ -1,0 +1,6 @@
+# Ignoring IntelliJ IDE files
+.idea/
+dsa.iml
+
+# Ignoring compiled .class files
+out/
