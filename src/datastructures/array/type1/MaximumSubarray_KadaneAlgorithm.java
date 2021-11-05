@@ -1,4 +1,4 @@
-package array;
+package datastructures.array.type1;
 
 //https://leetcode.com/problems/maximum-subarray/
 public class MaximumSubarray_KadaneAlgorithm {

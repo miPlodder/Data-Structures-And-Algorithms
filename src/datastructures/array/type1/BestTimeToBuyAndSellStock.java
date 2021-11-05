@@ -1,4 +1,4 @@
-package array;
+package datastructures.array.type1;
 
 //https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
 public class BestTimeToBuyAndSellStock {
