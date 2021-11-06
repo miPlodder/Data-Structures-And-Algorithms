@@ -52,7 +52,6 @@ public class Sorting {
 
     /*
      * For array with elements ranging from 1 to N
-     *
      */
     private static void cyclicSort(int[] arr) {
 
