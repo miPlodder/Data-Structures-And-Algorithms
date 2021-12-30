@@ -11,6 +11,8 @@ public class QuickSort {
 
     public static void main(String[] args) {
         int[] arr = {5, 4, 3, 2, 1};
+        (new QuickSort()).equals("");
+        "".hashCode();
         sort(arr, 0, arr.length - 1);
         System.out.println(Arrays.toString(arr));
     }
