@@ -15,6 +15,8 @@ public class Introduction {
         method("-> saksham");
         method((Object) "-> saksham");
         method(new Object());
+        //10 to the power of 8
+        System.out.println(1e8 + 1);
     }
 
 

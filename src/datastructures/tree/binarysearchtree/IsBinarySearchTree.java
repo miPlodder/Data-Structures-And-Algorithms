@@ -1,11 +1,11 @@
-package datastructures.tree.binarytree;
+package datastructures.tree.binarysearchtree;
 
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 
-//https://leetcode.com/problems/balanced-binary-tree/
-public class IsBalancedBinaryTree {
+//https://leetcode.com/problems/validate-binary-search-tree/
+public class IsBinarySearchTree {
 
     static class Node {
         int data;
@@ -70,28 +70,37 @@ public class IsBalancedBinaryTree {
         Integer[] preOrderArray = {50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 80, null, null, 87, null, null};
         Node root = constructBinaryTree(preOrderArray);
         breadthFirstSearch(root);
-        System.out.println("Is Balanced Binary Tree -> " + isBalancedBT(root).isBalanced);
+        System.out.println("Is BST" + isBST(root).isBST);
     }
 
-    static class BalPair {
-        int height;
-        boolean isBalanced;
+    /**
+     * This approach to return a custom set of values
+     */
+    static class BSTPair {
+        int min;
+        int max;
+        boolean isBST;
     }
 
-    private static BalPair isBalancedBT(Node node) {
-        BalPair balPair = new BalPair();
+    /**
+     * Since, custom set of values is needed, hence created a custom class BSTPair
+     */
+    private static BSTPair isBST(Node node) {
+        BSTPair pair = new BSTPair();
         if (node == null) {
-            balPair.isBalanced = true;
-            balPair.height = 0;
-            return balPair;
+            pair.isBST = true;
+            pair.min = Integer.MAX_VALUE;
+            pair.max = Integer.MIN_VALUE;
+            return pair;
         }
+        BSTPair leftPair = isBST(node.left);
+        BSTPair rightPair = isBST(node.right);
 
-        BalPair leftBalPair = isBalancedBT(node.left);
-        BalPair rightBalPair = isBalancedBT(node.right);
+        pair.isBST = leftPair.isBST && rightPair.isBST && (node.data > leftPair.max && node.data < rightPair.min);
+        pair.min = Math.min(node.data, Math.min(leftPair.min, rightPair.min));
+        pair.max = Math.max(node.data, Math.max(leftPair.max, rightPair.max));
 
-        balPair.height = Math.max(leftBalPair.height, rightBalPair.height) + 1;
-        balPair.isBalanced = (Math.abs(leftBalPair.height - rightBalPair.height) <= 1 ? true : false) && leftBalPair.isBalanced && rightBalPair.isBalanced;
-        return balPair;
+        return pair;
     }
 
 }

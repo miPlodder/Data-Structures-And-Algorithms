@@ -1,12 +1,11 @@
-package datastructures.tree.binarytree;
+package datastructures.tree.binarysearchtree;
 
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 
-//https://leetcode.com/problems/validate-binary-search-tree/
-public class IsBinarySearchTree {
-
+//https://www.codingninjas.com/codestudio/problem-details/largest-bst-subtree_893103
+public class LargestBSTSubtree {
     static class Node {
         int data;
         Node left, right;
@@ -70,7 +69,7 @@ public class IsBinarySearchTree {
         Integer[] preOrderArray = {50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 80, null, null, 87, null, null};
         Node root = constructBinaryTree(preOrderArray);
         breadthFirstSearch(root);
-        System.out.println("Is BST" + isBST(root).isBST);
+        System.out.println(isBST(root).largestBSTSize);
     }
 
     /**
@@ -80,6 +79,7 @@ public class IsBinarySearchTree {
         int min;
         int max;
         boolean isBST;
+        int largestBSTSize;
     }
 
     /**
@@ -91,6 +91,7 @@ public class IsBinarySearchTree {
             pair.isBST = true;
             pair.min = Integer.MAX_VALUE;
             pair.max = Integer.MIN_VALUE;
+            pair.largestBSTSize = 0;
             return pair;
         }
         BSTPair leftPair = isBST(node.left);
@@ -100,7 +101,11 @@ public class IsBinarySearchTree {
         pair.min = Math.min(node.data, Math.min(leftPair.min, rightPair.min));
         pair.max = Math.max(node.data, Math.max(leftPair.max, rightPair.max));
 
+        if (pair.isBST) {
+            pair.largestBSTSize = Math.max(leftPair.largestBSTSize, rightPair.largestBSTSize) + 1;
+        } else {
+            pair.largestBSTSize = Math.max(rightPair.largestBSTSize, leftPair.largestBSTSize);
+        }
         return pair;
     }
-
 }
