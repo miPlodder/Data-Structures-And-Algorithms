@@ -4,8 +4,8 @@ import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 
-//https://www.pepcoding.com/resources/online-java-foundation/binary-tree/binary-tree-path-to-leaves-from-root-official/ojquestion
-public class TransformToLeftClonedTree {
+//https://leetcode.com/problems/diameter-of-binary-tree/
+public class DiameterOfBinaryTree {
 
     static class Node {
         int data;
@@ -71,45 +71,49 @@ public class TransformToLeftClonedTree {
         Integer[] preOrderArray = {1, 2, 3, 4, null, null, null, 5, null, null, 6, null, 7, 8, null, null, 9, null, null};
         Node root = construct(preOrderArray);
         printBreadthFirstSearch(root);
-//        transformToLeftClonedTree_preOrder(root);
-        transformToLeftClonedTree_postOrder(root);
-        printBreadthFirstSearch(root);
-        undoTransformBackFromLeftClonedTree_preOrderWork(root);
-        printBreadthFirstSearch(root);
+        System.out.println("Height Of the Tree -> " + height(root));
+        System.out.println("Diameter using In-Efficient Solution -> " + diameter_inEfficient(root));
+        System.out.println("Diameter using Efficient Solution -> " + diameter_efficient(root).diameter);
     }
 
-    /**
-     * Work is done at pre-order place
-     */
-    private static void transformToLeftClonedTree_preOrder(Node node) {
-        if (node == null) return;
+    private static int diameter_inEfficient(Node node) {
+        if (node == null) return 0;
 
-        Node clone = new Node(node.data);
-        clone.left = node.left;
-        node.left = clone;
-        transformToLeftClonedTree_preOrder(node.left.left);
-        transformToLeftClonedTree_preOrder(node.right);
+        int maxLeftDiameter = diameter_inEfficient(node.left);
+        int maxRightDiameter = diameter_inEfficient(node.right);
+        int includingNode = height(node.left) + height(node.right) + 2;
+        return Math.max(maxLeftDiameter, Math.max(maxRightDiameter, includingNode));
     }
 
-    /**
-     * Work is done at post-order place
-     */
-    private static void transformToLeftClonedTree_postOrder(Node node) {
-        if (node == null) return;
-
-        transformToLeftClonedTree_postOrder(node.left);
-        transformToLeftClonedTree_postOrder(node.right);
-        Node clone = new Node(node.data);
-        clone.left = node.left;
-        node.left = clone;
+    static class DiaPair {
+        int height;
+        int diameter;
     }
 
-    private static void undoTransformBackFromLeftClonedTree_preOrderWork(Node node) {
-        if (node == null) return;
+    private static DiaPair diameter_efficient(Node node) {
+        DiaPair diaPair = new DiaPair();
 
-        Node leftNode = node.left;
-        node.left = leftNode.left;
-        undoTransformBackFromLeftClonedTree_preOrderWork(node.left);
-        undoTransformBackFromLeftClonedTree_preOrderWork(node.right);
+        if (node == null) {
+            diaPair.diameter = 0;
+            diaPair.height = -1;
+            return diaPair;
+        }
+
+        DiaPair leftDiaPair = diameter_efficient(node.left);
+        DiaPair rightDiaPair = diameter_efficient(node.right);
+
+        diaPair.height = Math.max(leftDiaPair.height, rightDiaPair.height) + 1;
+        diaPair.diameter = Math.max(leftDiaPair.diameter, Math.max(rightDiaPair.diameter, leftDiaPair.height + rightDiaPair.height + 2));
+
+        return diaPair;
+    }
+
+    private static int height(Node node) {
+        if (node == null) return -1;
+
+        int leftHeight = height(node.left);
+        int rightHeight = height(node.right);
+
+        return Math.max(leftHeight, rightHeight) + 1;
     }
 }

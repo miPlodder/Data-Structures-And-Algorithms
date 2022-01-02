@@ -4,8 +4,8 @@ import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 
-public class SizeSumMaxHeightOfBinaryTree {
-
+//https://www.codingninjas.com/codestudio/problem-details/largest-bst-subtree_893103
+public class LargestBSTSubtree {
     static class Node {
         int data;
         Node left, right;
@@ -69,42 +69,43 @@ public class SizeSumMaxHeightOfBinaryTree {
         Integer[] preOrderArray = {50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 80, null, null, 87, null, null};
         Node root = constructBinaryTree(preOrderArray);
         breadthFirstSearch(root);
-        System.out.println("Size Of Binary Tree -> " + size(root));
-        System.out.println("Sum Of Binary Tree -> " + sumOfAllNodes(root));
-        System.out.println("Maximum Node Of Binary Tree -> " + maxOfAllNodes(root));
-        System.out.println("Height Of Binary Tree -> " + heightOfBinaryTree(root));
+        System.out.println(isBST(root).largestBSTSize);
     }
 
-    private static int size(Node node) {
-        if (node == null) return 0;
-
-        int leftSize = size(node.left);
-        int rightSize = size(node.right);
-        return leftSize + rightSize + 1;
+    /**
+     * This approach to return a custom set of values
+     */
+    static class BSTPair {
+        int min;
+        int max;
+        boolean isBST;
+        int largestBSTSize;
     }
 
-    private static int sumOfAllNodes(Node node) {
-        if (node == null) return 0;
+    /**
+     * Since, custom set of values is needed, hence created a custom class BSTPair
+     */
+    private static BSTPair isBST(Node node) {
+        BSTPair pair = new BSTPair();
+        if (node == null) {
+            pair.isBST = true;
+            pair.min = Integer.MAX_VALUE;
+            pair.max = Integer.MIN_VALUE;
+            pair.largestBSTSize = 0;
+            return pair;
+        }
+        BSTPair leftPair = isBST(node.left);
+        BSTPair rightPair = isBST(node.right);
 
-        int leftSum = sumOfAllNodes(node.left);
-        int rightSum = sumOfAllNodes(node.right);
-        return leftSum + rightSum + node.data;
-    }
+        pair.isBST = leftPair.isBST && rightPair.isBST && (node.data > leftPair.max && node.data < rightPair.min);
+        pair.min = Math.min(node.data, Math.min(leftPair.min, rightPair.min));
+        pair.max = Math.max(node.data, Math.max(leftPair.max, rightPair.max));
 
-    private static int maxOfAllNodes(Node node) {
-        if (node == null) return Integer.MIN_VALUE;
-
-        int leftMax = maxOfAllNodes(node.left);
-        int rightMax = maxOfAllNodes(node.right);
-        return Math.max(node.data, Math.max(leftMax, rightMax));
-    }
-
-    private static int heightOfBinaryTree(Node node) {
-        if (node == null) return 0; //0 for nodes, -1 for edges
-
-        int leftSubTreeHeight = heightOfBinaryTree(node.left);
-        int rightSubTreeHeight = heightOfBinaryTree(node.right);
-
-        return Math.max(leftSubTreeHeight, rightSubTreeHeight) + 1;
+        if (pair.isBST) {
+            pair.largestBSTSize = Math.max(leftPair.largestBSTSize, rightPair.largestBSTSize) + 1;
+        } else {
+            pair.largestBSTSize = Math.max(rightPair.largestBSTSize, leftPair.largestBSTSize);
+        }
+        return pair;
     }
 }

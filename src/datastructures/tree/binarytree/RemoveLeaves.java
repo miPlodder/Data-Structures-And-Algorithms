@@ -1,12 +1,10 @@
 package datastructures.tree.binarytree;
 
-import java.util.Stack;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.LinkedList;
 
-//https://www.pepcoding.com/resources/online-java-foundation/binary-tree/binary-tree-path-to-leaves-from-root-official/ojquestion
-public class TransformToLeftClonedTree {
-
+public class RemoveLeaves {
     static class Node {
         int data;
         Node left, right;
@@ -71,45 +69,19 @@ public class TransformToLeftClonedTree {
         Integer[] preOrderArray = {1, 2, 3, 4, null, null, null, 5, null, null, 6, null, 7, 8, null, null, 9, null, null};
         Node root = construct(preOrderArray);
         printBreadthFirstSearch(root);
-//        transformToLeftClonedTree_preOrder(root);
-        transformToLeftClonedTree_postOrder(root);
-        printBreadthFirstSearch(root);
-        undoTransformBackFromLeftClonedTree_preOrderWork(root);
+        removeLeaves(root);
         printBreadthFirstSearch(root);
     }
 
-    /**
-     * Work is done at pre-order place
-     */
-    private static void transformToLeftClonedTree_preOrder(Node node) {
-        if (node == null) return;
-
-        Node clone = new Node(node.data);
-        clone.left = node.left;
-        node.left = clone;
-        transformToLeftClonedTree_preOrder(node.left.left);
-        transformToLeftClonedTree_preOrder(node.right);
-    }
-
-    /**
-     * Work is done at post-order place
-     */
-    private static void transformToLeftClonedTree_postOrder(Node node) {
-        if (node == null) return;
-
-        transformToLeftClonedTree_postOrder(node.left);
-        transformToLeftClonedTree_postOrder(node.right);
-        Node clone = new Node(node.data);
-        clone.left = node.left;
-        node.left = clone;
-    }
-
-    private static void undoTransformBackFromLeftClonedTree_preOrderWork(Node node) {
-        if (node == null) return;
-
-        Node leftNode = node.left;
-        node.left = leftNode.left;
-        undoTransformBackFromLeftClonedTree_preOrderWork(node.left);
-        undoTransformBackFromLeftClonedTree_preOrderWork(node.right);
+    private static Node removeLeaves(Node node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.left == null && node.right == null) {
+            return null;
+        }
+        node.left = removeLeaves(node.left);
+        node.right = removeLeaves(node.right);
+        return node;
     }
 }

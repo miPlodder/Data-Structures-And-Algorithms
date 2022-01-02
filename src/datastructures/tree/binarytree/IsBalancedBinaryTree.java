@@ -4,7 +4,8 @@ import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 
-public class SizeSumMaxHeightOfBinaryTree {
+//https://leetcode.com/problems/balanced-binary-tree/
+public class IsBalancedBinaryTree {
 
     static class Node {
         int data;
@@ -69,42 +70,28 @@ public class SizeSumMaxHeightOfBinaryTree {
         Integer[] preOrderArray = {50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 80, null, null, 87, null, null};
         Node root = constructBinaryTree(preOrderArray);
         breadthFirstSearch(root);
-        System.out.println("Size Of Binary Tree -> " + size(root));
-        System.out.println("Sum Of Binary Tree -> " + sumOfAllNodes(root));
-        System.out.println("Maximum Node Of Binary Tree -> " + maxOfAllNodes(root));
-        System.out.println("Height Of Binary Tree -> " + heightOfBinaryTree(root));
+        System.out.println("Is Balanced Binary Tree -> " + isBalancedBT(root).isBalanced);
     }
 
-    private static int size(Node node) {
-        if (node == null) return 0;
-
-        int leftSize = size(node.left);
-        int rightSize = size(node.right);
-        return leftSize + rightSize + 1;
+    static class BalPair {
+        int height;
+        boolean isBalanced;
     }
 
-    private static int sumOfAllNodes(Node node) {
-        if (node == null) return 0;
+    private static BalPair isBalancedBT(Node node) {
+        BalPair balPair = new BalPair();
+        if (node == null) {
+            balPair.isBalanced = true;
+            balPair.height = 0;
+            return balPair;
+        }
 
-        int leftSum = sumOfAllNodes(node.left);
-        int rightSum = sumOfAllNodes(node.right);
-        return leftSum + rightSum + node.data;
+        BalPair leftBalPair = isBalancedBT(node.left);
+        BalPair rightBalPair = isBalancedBT(node.right);
+
+        balPair.height = Math.max(leftBalPair.height, rightBalPair.height) + 1;
+        balPair.isBalanced = (Math.abs(leftBalPair.height - rightBalPair.height) <= 1 ? true : false) && leftBalPair.isBalanced && rightBalPair.isBalanced;
+        return balPair;
     }
 
-    private static int maxOfAllNodes(Node node) {
-        if (node == null) return Integer.MIN_VALUE;
-
-        int leftMax = maxOfAllNodes(node.left);
-        int rightMax = maxOfAllNodes(node.right);
-        return Math.max(node.data, Math.max(leftMax, rightMax));
-    }
-
-    private static int heightOfBinaryTree(Node node) {
-        if (node == null) return 0; //0 for nodes, -1 for edges
-
-        int leftSubTreeHeight = heightOfBinaryTree(node.left);
-        int rightSubTreeHeight = heightOfBinaryTree(node.right);
-
-        return Math.max(leftSubTreeHeight, rightSubTreeHeight) + 1;
-    }
 }

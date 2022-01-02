@@ -4,8 +4,8 @@ import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 
-//https://www.pepcoding.com/resources/online-java-foundation/binary-tree/binary-tree-path-to-leaves-from-root-official/ojquestion
-public class TransformToLeftClonedTree {
+//https://www.pepcoding.com/resources/online-java-foundation/binary-tree/print-single-child-nodes-official/ojquestion
+public class PrintSingleChildNodes {
 
     static class Node {
         int data;
@@ -71,45 +71,28 @@ public class TransformToLeftClonedTree {
         Integer[] preOrderArray = {1, 2, 3, 4, null, null, null, 5, null, null, 6, null, 7, 8, null, null, 9, null, null};
         Node root = construct(preOrderArray);
         printBreadthFirstSearch(root);
-//        transformToLeftClonedTree_preOrder(root);
-        transformToLeftClonedTree_postOrder(root);
-        printBreadthFirstSearch(root);
-        undoTransformBackFromLeftClonedTree_preOrderWork(root);
-        printBreadthFirstSearch(root);
+        printSingleChildNodes(root);
+        System.out.println();
+        printSingleChildNodes(root, null);
     }
 
-    /**
-     * Work is done at pre-order place
-     */
-    private static void transformToLeftClonedTree_preOrder(Node node) {
+    private static void printSingleChildNodes(Node node) {
         if (node == null) return;
-
-        Node clone = new Node(node.data);
-        clone.left = node.left;
-        node.left = clone;
-        transformToLeftClonedTree_preOrder(node.left.left);
-        transformToLeftClonedTree_preOrder(node.right);
+        if (node.left != null ^ node.right != null) {
+            System.out.print(node.data + " , ");
+        }
+        printSingleChildNodes(node.left);
+        printSingleChildNodes(node.right);
     }
 
-    /**
-     * Work is done at post-order place
-     */
-    private static void transformToLeftClonedTree_postOrder(Node node) {
+    private static void printSingleChildNodes(Node node, Node parent) {
         if (node == null) return;
-
-        transformToLeftClonedTree_postOrder(node.left);
-        transformToLeftClonedTree_postOrder(node.right);
-        Node clone = new Node(node.data);
-        clone.left = node.left;
-        node.left = clone;
-    }
-
-    private static void undoTransformBackFromLeftClonedTree_preOrderWork(Node node) {
-        if (node == null) return;
-
-        Node leftNode = node.left;
-        node.left = leftNode.left;
-        undoTransformBackFromLeftClonedTree_preOrderWork(node.left);
-        undoTransformBackFromLeftClonedTree_preOrderWork(node.right);
+        if (parent != null && parent.left == node && parent.right == null) {
+            System.out.print(node.data + " , ");
+        } else if (parent != null && parent.left == null && parent.right == node) {
+            System.out.print(node.data + " , ");
+        }
+        printSingleChildNodes(node.left);
+        printSingleChildNodes(node.right);
     }
 }

@@ -1,10 +1,11 @@
 package datastructures.tree.binarytree;
 
 import java.util.Stack;
-import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Queue;
 
-public class SizeSumMaxHeightOfBinaryTree {
+//https://leetcode.com/problems/binary-tree-tilt/
+public class TiltOfBinaryTree {
 
     static class Node {
         int data;
@@ -65,46 +66,33 @@ public class SizeSumMaxHeightOfBinaryTree {
         System.out.println();
     }
 
+    private static int tilt = 0;
+
     public static void main(String[] args) {
         Integer[] preOrderArray = {50, 25, 12, null, null, 37, 30, null, null, null, 75, 62, null, 80, null, null, 87, null, null};
         Node root = constructBinaryTree(preOrderArray);
         breadthFirstSearch(root);
-        System.out.println("Size Of Binary Tree -> " + size(root));
-        System.out.println("Sum Of Binary Tree -> " + sumOfAllNodes(root));
-        System.out.println("Maximum Node Of Binary Tree -> " + maxOfAllNodes(root));
-        System.out.println("Height Of Binary Tree -> " + heightOfBinaryTree(root));
+        findTilt(root);
+        System.out.println("Tilt Of Binary Tree -> " + tilt);
+        System.out.println("Tilt Of Binary Tree -> " + findTilt2(root)[1]);
     }
 
-    private static int size(Node node) {
+    private static int findTilt(Node node) {
         if (node == null) return 0;
+        int leftSum = findTilt(node.left);
+        int rightSum = findTilt(node.right);
 
-        int leftSize = size(node.left);
-        int rightSize = size(node.right);
-        return leftSize + rightSize + 1;
-    }
-
-    private static int sumOfAllNodes(Node node) {
-        if (node == null) return 0;
-
-        int leftSum = sumOfAllNodes(node.left);
-        int rightSum = sumOfAllNodes(node.right);
+        tilt = Math.abs(leftSum - rightSum);
         return leftSum + rightSum + node.data;
     }
 
-    private static int maxOfAllNodes(Node node) {
-        if (node == null) return Integer.MIN_VALUE;
+    // 0 -> sum, 1 -> tilt
+    private static int[] findTilt2(Node node) {
+        if (node == null) return new int[]{0, 0};
+        int[] leftRes = findTilt2(node.left);
+        int[] rightRes = findTilt2(node.right);
 
-        int leftMax = maxOfAllNodes(node.left);
-        int rightMax = maxOfAllNodes(node.right);
-        return Math.max(node.data, Math.max(leftMax, rightMax));
-    }
-
-    private static int heightOfBinaryTree(Node node) {
-        if (node == null) return 0; //0 for nodes, -1 for edges
-
-        int leftSubTreeHeight = heightOfBinaryTree(node.left);
-        int rightSubTreeHeight = heightOfBinaryTree(node.right);
-
-        return Math.max(leftSubTreeHeight, rightSubTreeHeight) + 1;
+        int tilt = Math.abs(leftRes[0] - rightRes[0]);
+        return new int[]{leftRes[0] + rightRes[0] + node.data, tilt};
     }
 }
